@@ -139,7 +139,7 @@ CONTAINS
                    YSUSCHEME,MRFSCHEME,GFSSCHEME,MYJPBLSCHEME,ACMPBLSCHEME,&
                    QNSEPBLSCHEME,MYNNPBLSCHEME2,MYNNPBLSCHEME3,BOULACSCHEME,&
                    CAMUWPBLSCHEME,BEPSCHEME,BEP_BEMSCHEME,MYJSFCSCHEME, &
-                   FITCHSCHEME,SHINHONGSCHEME,                       &
+                   FITCHSCHEME,UNIRSCHEME,SHINHONGSCHEME,                       &
                    TEMFPBLSCHEME,GBMPBLSCHEME,                       &
                    CAMMGMPSCHEME,p_qi,p_qni,p_qnc,param_first_scalar,& !CAMMGMPSCHEME, p_qni,p_qnc is used for camuwpbl scheme
                    p_qnwfa,p_qnifa
@@ -152,7 +152,7 @@ CONTAINS
                    , QNSEPBLSCHEME, p_qi,param_first_scalar &
                    , TEMFPBLSCHEME, GFSEDMFSCHEME           &
                    , CAMUWPBLSCHEME                                       &
-                   , FITCHSCHEME, SHINHONGSCHEME                          &
+                   , FITCHSCHEME, UNIRSCHEME, SHINHONGSCHEME                          &
                    , GBMPBLSCHEME, MYJSFCSCHEME
 #endif
 
@@ -184,6 +184,7 @@ CONTAINS
    USE module_bl_mynn
    USE module_bl_fogdes
    USE module_wind_fitch
+   USE module_wind_unir
 #endif
 
    !  This driver calls subroutines for the PBL parameterizations.
@@ -1990,6 +1991,35 @@ CONTAINS
                      'xlong_v = ' ,                                     &
                       PRESENT( id ) ,                                   &
                       PRESENT( z_at_w ) 
+                     CALL wrf_debug(0,message)
+                     CALL wrf_error_fatal('Lack arguments to call turbine_drag')
+                  ENDIF
+
+       CASE (unirscheme)
+                  IF (PRESENT(id) .AND.  &
+                     PRESENT(z_at_w) ) THEN
+                     CALL wrf_debug(100,'in phys/module_wind_unir.F')
+                     CALL dragforceunir(   &
+                     & ID=id               &
+                     &,Z_AT_W=z_at_w,u=u_phy,v=v_phy &
+                     &,DX=dx,DZ=dz8w,DT=dt           &
+                     &,QKE=qke                       &
+                     &,DU=rublten,DV=rvblten         &
+                     &,WINDFARM_OPT=windfarm_opt,POWER=power             &
+                     &,IDS=ids,IDE=ide,JDS=jds,JDE=jde,KDS=kds,KDE=kde   &
+                     &,IMS=ims,IME=ime,JMS=jms,JME=jme,KMS=kms,KME=kme   &
+                     &,ITS=its,ITE=ite,JTS=jts,JTE=jte,KTS=kts,KTE=kte   )
+                  ELSE
+                     WRITE ( message , FMT = '(A,6(L1,1X))' )
+                         'present: '//     &
+                         'ID, '//          &
+                         'z_at_w, '//      &
+                         'xlat_u, '//      &
+                         'xlong_u, '//     &
+                         'xlat_v, '//      &
+                         'xlong_v = ' ,    &
+                          PRESENT( id ) ,  &
+                          PRESENT( z_at_w )
                      CALL wrf_debug(0,message)
                      CALL wrf_error_fatal('Lack arguments to call turbine_drag')
                   ENDIF

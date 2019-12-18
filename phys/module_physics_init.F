@@ -265,6 +265,7 @@ CONTAINS
    USE module_cam_support,     ONLY : cam_mam_aerosols
 #endif
    USE module_wind_fitch
+   USE module_wind_unir
    IMPLICIT NONE
 !-----------------------------------------------------------------
    TYPE (grid_config_rec_type)              :: config_flags
@@ -1235,6 +1236,8 @@ CONTAINS
 !
   IF ( config_flags%windfarm_opt .EQ. 1 ) THEN
     CALL init_module_wind_fitch(id,config_flags,xlong,xlat,windfarm_initialized,ims,ime,jms,jme,its,ite,jts,jte,ids,ide,jds,jde)
+  ELSEIF ( config_flags%windfarm_opt .EQ. 2 ) THEN
+     CALL init_module_wind_unir(id,config_flags,xlong,xlat,windfarm_initialized,ims,ime,jms,jme,its,ite,jts,jte,ids,ide,jds,jde)
   ENDIF
 
 
