@@ -2010,7 +2010,7 @@ CONTAINS
                      &,IMS=ims,IME=ime,JMS=jms,JME=jme,KMS=kms,KME=kme   &
                      &,ITS=its,ITE=ite,JTS=jts,JTE=jte,KTS=kts,KTE=kte   )
                   ELSE
-                     WRITE ( message , FMT = '(A,6(L1,1X))' )
+                     WRITE ( message , FMT = '(A,6(L1,1X))' )  &
                          'present: '//     &
                          'ID, '//          &
                          'z_at_w, '//      &
